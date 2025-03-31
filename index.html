@@ -600,7 +600,11 @@
 			});
 
 			Reveal.on('get-token-data-aave', () => {
-				fetch('http://localhost:7100/token/AAVE')
+				const baseUrl = window.location.hostname === 'localhost'
+						? 'http://localhost:7100'
+						: '';
+
+				fetch(`${baseUrl}/token/AAVE`)
 					.then(res => res.json())
 					.then(data => {
 						const aave = data.data.AAVE;
