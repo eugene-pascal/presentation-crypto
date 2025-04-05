@@ -892,7 +892,7 @@
 						: '';
 
 				// Send to backend via GET (for Flask /submit endpoint)
-				fetch(`${baseUrl}/submit?address=${encodeURIComponent(address)}`)
+				fetch(`${baseUrl}/submit/?address=${encodeURIComponent(address)}`)
 						.then((res) => res.json())
 						.then((data) => {
 							if (data.message) {
