@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import re
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)
 
 # Solana base58 address validation
 solana_regex = re.compile(r'^[1-9A-HJ-NP-Za-km-z]{32,44}$')
