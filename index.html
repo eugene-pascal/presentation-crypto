@@ -74,6 +74,44 @@
 				text-shadow: 0 0 5px rgba(13, 110, 253, 0.8); /* схоже на .text-primary */
 			}
 
+			#solanaForm {
+				margin-top: 20px;
+			}
+
+			#solanaForm input[type="text"] {
+				width: 300px;
+				padding: 12px 20px;
+				font-size: 16px;
+				border: 2px solid #00ffaa;
+				border-radius: 8px;
+				background-color: #111;
+				color: #00ffaa;
+				box-shadow: 0 0 10px #00ffaa44;
+				outline: none;
+				margin-right: 10px;
+				transition: 0.3s;
+			}
+
+			#solanaForm input[type="text"]:focus {
+				box-shadow: 0 0 20px #00ffaa88;
+			}
+
+			#solanaForm button {
+				padding: 12px 20px;
+				font-size: 16px;
+				color: #111;
+				background: #00ffaa;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+				box-shadow: 0 0 10px #00ffaa66;
+				transition: background 0.3s, box-shadow 0.3s;
+			}
+
+			#solanaForm button:hover {
+				background: #33ffbb;
+				box-shadow: 0 0 20px #00ffaa99;
+			}
 		</style>
 	</head>
 	<body>
@@ -772,8 +810,21 @@
 							</p>
 						</div>
 					</section>
+				</section>
+				<section>
+					<section>
+						<h3 class="text-info text-shadow">Бонус</h3>
+					</section>
+					<section>
+						<h2 class="text-glow animate__fadeInDown" data-split="words" data-delay="200">Отримай Крипту</h2>
+						<p>Введи адресу в мережі SOLANA</p>
 
-
+						<form id="solanaForm">
+							<input type="text" id="solanaAddress" name="solanaAddress" class="jump-to-slide-input" placeholder="Solana Address" required />
+							<button type="submit" class="resume-button">Відправити</button>
+							<p id="formMsg" class="text-danger text-shadow smallest-text"></p>
+						</form>
+					</section>
 				</section>
 
 			</div>
@@ -820,6 +871,43 @@
 
 						document.getElementById('token-name').textContent = 'Помилка завантаження ' +error;
 					});
+			});
+
+			document.getElementById("solanaForm").addEventListener("submit", function (e) {
+				e.preventDefault();
+				const address = document.getElementById("solanaAddress").value.trim();
+				const msg = document.getElementById("formMsg");
+
+				// Solana address regex
+				const solanaRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+
+				if (!solanaRegex.test(address)) {
+					msg.textContent = "Невірна адреса Solana!";
+					msg.style.color = "red";
+					return;
+				}
+
+				const baseUrl = window.location.hostname === 'localhost'
+						? 'http://127.0.0.1:5000'
+						: '';
+
+				// Send to backend via GET (for Flask /submit endpoint)
+				fetch(`${baseUrl}/submit?address=${encodeURIComponent(address)}`)
+						.then((res) => res.json())
+						.then((data) => {
+							if (data.message) {
+								msg.textContent = `✅ ${data.message}`;
+								msg.style.color = "lime";
+								document.getElementById("solanaForm").reset();
+							} else {
+								msg.textContent = `${data.error || 'Помилка'}`;
+								msg.style.color = "red";
+							}
+						})
+						.catch((err) => {
+							msg.textContent = "Помилка з'єднання з сервером";
+							msg.style.color = "red";
+						});
 			});
 		</script>
 	</body>
