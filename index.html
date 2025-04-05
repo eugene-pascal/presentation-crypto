@@ -887,12 +887,8 @@
 					return;
 				}
 
-				const baseUrl = window.location.hostname === 'localhost'
-						? 'http://127.0.0.1:5000'
-						: '';
-
 				// Send to backend via GET (for Flask /submit endpoint)
-				fetch(`${baseUrl}/submit?address=${encodeURIComponent(address)}`)
+				fetch(`http://127.0.0.1:5000/submit?address=${encodeURIComponent(address)}`)
 						.then((res) => res.json())
 						.then((data) => {
 							if (data.message) {
